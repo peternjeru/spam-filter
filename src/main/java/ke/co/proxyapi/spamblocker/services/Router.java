@@ -14,7 +14,7 @@ public class Router extends RouteBuilder
 	private MessageProcessor messageProcessor;
 
 	@Override
-	public void configure() throws Exception
+	public void configure()
 	{
 		from("direct:incomingMessage")
 				.process(messageProcessor)

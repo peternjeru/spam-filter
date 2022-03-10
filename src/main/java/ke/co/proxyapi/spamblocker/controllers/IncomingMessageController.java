@@ -19,6 +19,7 @@ public class IncomingMessageController
 	@PostMapping(value = "/incoming")
 	public ResponseEntity<Void> incomingMessage(@RequestBody UpdateDto body)
 	{
+		log.info("New message received: " + body.toString());
 		template.asyncSendBody("direct:incomingMessage", body);
 		return ResponseEntity.ok().build();
 	}
