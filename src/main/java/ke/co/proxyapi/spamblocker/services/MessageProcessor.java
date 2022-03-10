@@ -47,6 +47,11 @@ public class MessageProcessor implements Processor
 			messageDto = updateDto.getMessage();
 		}
 
+		if (messageDto.getText() == null || messageDto.getText().isEmpty())
+		{
+			return;
+		}
+
 		String normalized = Normalizer.normalize(StringUtils.stripAccents(messageDto.getText()), Normalizer.Form.NFKC);
 		String ascii = NON_ASCII_PATTERN.matcher(normalized).replaceAll("");
 		List<Integer> allMatches = keywordsRepository.findAllMatches(ascii);
