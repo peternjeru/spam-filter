@@ -1,0 +1,34 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /spambot
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${spambot_db_url}
+    username: ${spambot_db_username}
+    password: ${spambot_db_password}
+
+  jpa:
+    hibernate:
+      dialect: org.hibernate.dialect.PostgreSQL95Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+    database: postgresql
+
+logging:
+  level:
+    root: INFO
+
+app:
+  cron-job: "cron:tab?schedule=0 0 * * * ?"
+  leeway: 5
+  telegram:
+    api-url: "https://api.telegram.org"
+    token: ${spambot_tg_api_token}
+
+  http:
+    connect-timeout: 60000
+    read-timeout: 60000
