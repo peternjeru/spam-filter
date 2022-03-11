@@ -21,6 +21,9 @@ public class MessageDto implements Serializable
 	@JsonProperty("text")
 	private String text;
 
+	@JsonProperty("caption")
+	private String caption;
+
 	@JsonProperty("from")
 	private UserDto user;
 
