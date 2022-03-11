@@ -1,7 +1,5 @@
 server:
   port: 8080
-  servlet:
-    context-path: /spambot
 
 spring:
   datasource:
@@ -24,7 +22,7 @@ logging:
 
 app:
   cron-job: "cron:tab?schedule=0 0 * * * ?"
-  leeway: 5
+  leeway: 3
   telegram:
     api-url: "https://api.telegram.org"
     token: ${spambot_tg_api_token}

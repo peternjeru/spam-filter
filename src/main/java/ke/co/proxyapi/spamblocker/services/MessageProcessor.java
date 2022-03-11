@@ -55,9 +55,10 @@ public class MessageProcessor implements Processor
 		String normalized = Normalizer.normalize(StringUtils.stripAccents(messageDto.getText()), Normalizer.Form.NFKC);
 		String ascii = NON_ASCII_PATTERN.matcher(normalized).replaceAll("");
 		List<Integer> allMatches = keywordsRepository.findAllMatches(ascii);
+		log.info("Matches: " + allMatches.size());
+
 		if (allMatches.size() >= leeway)
 		{
-			log.info("Matches: " + allMatches.size());
 			DeleteMessageDto deleteMessageDto = new DeleteMessageDto(messageDto.getChat().getId(), messageDto.getMessageID());
 			template.asyncSendBody("direct:telegram", deleteMessageDto);
 		}
