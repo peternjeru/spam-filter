@@ -22,7 +22,7 @@ logging:
 
 app:
   cron-job: "cron:tab?schedule=0 0 * * * ?"
-  leeway: 3
+  leeway: 5
   telegram:
     api-url: "https://api.telegram.org"
     token: ${spambot_tg_api_token}
