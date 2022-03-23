@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 
 public class BadRequestException extends RuntimeException
 {
-	public BadRequestException(HttpStatus statusCode, String body)
+	public BadRequestException(String body)
 	{
-		super(statusCode.getReasonPhrase());
+		super(HttpStatus.BAD_REQUEST.getReasonPhrase() + ": " + body);
 	}
 }
