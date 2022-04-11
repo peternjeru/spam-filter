@@ -1,5 +1,8 @@
 package ke.co.proxyapi.spamblocker.services;
 
+import com.linkedin.urls.Url;
+import com.linkedin.urls.detection.UrlDetector;
+import com.linkedin.urls.detection.UrlDetectorOptions;
 import ke.co.proxyapi.spamblocker.dtos.DeleteMessageDto;
 import ke.co.proxyapi.spamblocker.dtos.MessageDto;
 import ke.co.proxyapi.spamblocker.dtos.UpdateDto;
@@ -27,8 +30,11 @@ public class MessageProcessor implements Processor
 	@Autowired
 	private ProducerTemplate template;
 
-	@Value("${app.leeway}")
-	private Integer leeway;
+	@Value("${app.leeway-min}")
+	private Integer leewayMin;
+
+	@Value("${app.leeway-max}")
+	private Integer leewayMax;
 
 	private final Pattern NON_ASCII_PATTERN = Pattern.compile("\\P{ASCII}");
 
@@ -67,10 +73,26 @@ public class MessageProcessor implements Processor
 		List<Integer> allMatches = keywordsRepository.findAllMatches(ascii);
 		log.info("Matches: " + allMatches.size());
 
-		if (allMatches.size() >= leeway)
+		if ((allMatches.size() >= leewayMin && hasTgLink(ascii)) || allMatches.size() >= leewayMax)
 		{
 			DeleteMessageDto deleteMessageDto = new DeleteMessageDto(messageDto.getChat().getId(), messageDto.getMessageID());
 			template.asyncSendBody("direct:telegram", deleteMessageDto);
 		}
+	}
+
+	private boolean hasTgLink(String message)
+	{
+		String tgDomain = "t.me";
+		UrlDetector parser = new UrlDetector(message, UrlDetectorOptions.HTML);
+		List<Url> urlList = parser.detect();
+
+		for (Url url: urlList)
+		{
+			if (url.getHost().equalsIgnoreCase(tgDomain))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }
