@@ -1,5 +1,6 @@
 package ke.co.proxyapi.spamblocker.controllers;
 
+import ke.co.proxyapi.spamblocker.dtos.NewKeywordsDto;
 import ke.co.proxyapi.spamblocker.dtos.UpdateDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.ProducerTemplate;
@@ -21,6 +22,14 @@ public class IncomingMessageController
 	{
 		log.info("New message received: " + body.toString());
 		template.asyncSendBody("direct:incomingMessage", body);
+		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping(value = "/keywords")
+	public ResponseEntity<Void> newKeywords(@RequestBody NewKeywordsDto body)
+	{
+		log.info("New keywords received: " + body.toString());
+		template.asyncSendBody("direct:keywords", body);
 		return ResponseEntity.ok().build();
 	}
 }

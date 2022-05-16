@@ -13,11 +13,18 @@ public class Router extends RouteBuilder
 	@Autowired
 	private MessageProcessor messageProcessor;
 
+	@Autowired
+	private NewKeywordsProcessor newKeywordsProcessor;
+
 	@Override
 	public void configure()
 	{
 		from("direct:incomingMessage")
 				.process(messageProcessor)
+				.end();
+
+		from("direct:keywords")
+				.process(newKeywordsProcessor)
 				.end();
 
 		from("direct:telegram")

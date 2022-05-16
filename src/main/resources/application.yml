@@ -32,3 +32,5 @@ app:
   http:
     connect-timeout: 60000
     read-timeout: 60000
+
+  pass: ${spambot_password}

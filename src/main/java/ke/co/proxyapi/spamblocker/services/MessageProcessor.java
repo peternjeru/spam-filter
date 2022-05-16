@@ -70,6 +70,8 @@ public class MessageProcessor implements Processor
 
 		String normalized = Normalizer.normalize(StringUtils.stripAccents(text), Normalizer.Form.NFKC);
 		String ascii = NON_ASCII_PATTERN.matcher(normalized).replaceAll("");
+		log.info("Normalized Txt:" + ascii);
+
 		List<Integer> allMatches = keywordsRepository.findAllMatches(ascii);
 		log.info("Matches: " + allMatches.size());
 
