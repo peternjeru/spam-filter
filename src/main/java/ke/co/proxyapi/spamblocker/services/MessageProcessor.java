@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 @Service
@@ -70,7 +71,7 @@ public class MessageProcessor implements Processor
 
 		String normalized = Normalizer.normalize(StringUtils.stripAccents(text), Normalizer.Form.NFKC);
 		String ascii = NON_ASCII_PATTERN.matcher(normalized).replaceAll("");
-		log.info("Normalized Txt:" + ascii);
+		log.info("Normalized Txt:\n\n" + ascii);
 
 		List<Integer> allMatches = keywordsRepository.findAllMatches(ascii);
 		log.info("Matches: " + allMatches.size());
@@ -84,13 +85,14 @@ public class MessageProcessor implements Processor
 
 	private boolean hasTgLink(String message)
 	{
-		String tgDomain = "t.me";
+		Set<String> tgDomains = Set.of("t.me", "telegram.me");
+
 		UrlDetector parser = new UrlDetector(message, UrlDetectorOptions.HTML);
 		List<Url> urlList = parser.detect();
 
 		for (Url url: urlList)
 		{
-			if (url.getHost().equalsIgnoreCase(tgDomain))
+			if (tgDomains.contains(url.getHost()))
 			{
 				return true;
 			}

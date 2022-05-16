@@ -13,7 +13,7 @@
 
     <groupId>ke.co.proxyapi</groupId>
     <artifactId>spamblocker</artifactId>
-    <version>1.0.0-${timestamp}</version>
+    <version>1.0.0</version>
     <packaging>war</packaging>
 
     <properties>
