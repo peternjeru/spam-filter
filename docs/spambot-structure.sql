@@ -5,7 +5,7 @@
 -- Dumped from database version 12.7
 -- Dumped by pg_dump version 12.7
 
--- Started on 2022-05-30 09:03:31
+-- Started on 2022-05-30 09:17:52
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -27,9 +27,9 @@ CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public;
 
 
 --
--- TOC entry 2883 (class 0 OID 0)
+-- TOC entry 2885 (class 0 OID 0)
 -- Dependencies: 2
--- Name: EXTENSION fuzzystrmatch; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION fuzzystrmatch; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION fuzzystrmatch IS 'determine similarities and distance between strings';
@@ -44,9 +44,9 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
 
 
 --
--- TOC entry 2884 (class 0 OID 0)
+-- TOC entry 2886 (class 0 OID 0)
 -- Dependencies: 3
--- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
@@ -67,8 +67,6 @@ CREATE TABLE public.keywords (
 );
 
 
-ALTER TABLE public.keywords OWNER TO api;
-
 --
 -- TOC entry 205 (class 1259 OID 107869)
 -- Name: keywords_id_seq; Type: SEQUENCE; Schema: public; Owner: api
@@ -83,10 +81,8 @@ CREATE SEQUENCE public.keywords_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.keywords_id_seq OWNER TO api;
-
 --
--- TOC entry 2885 (class 0 OID 0)
+-- TOC entry 2887 (class 0 OID 0)
 -- Dependencies: 205
 -- Name: keywords_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: api
 --
@@ -100,6 +96,88 @@ ALTER SEQUENCE public.keywords_id_seq OWNED BY public.keywords.id;
 --
 
 ALTER TABLE ONLY public.keywords ALTER COLUMN id SET DEFAULT nextval('public.keywords_id_seq'::regclass);
+
+
+--
+-- TOC entry 2878 (class 0 OID 107866)
+-- Dependencies: 204
+-- Data for Name: keywords; Type: TABLE DATA; Schema: public; Owner: api
+--
+
+INSERT INTO public.keywords (id, word) VALUES (1, 'money');
+INSERT INTO public.keywords (id, word) VALUES (2, 'link');
+INSERT INTO public.keywords (id, word) VALUES (3, 'trader');
+INSERT INTO public.keywords (id, word) VALUES (4, 'telegram');
+INSERT INTO public.keywords (id, word) VALUES (5, 'stay');
+INSERT INTO public.keywords (id, word) VALUES (6, 'scam');
+INSERT INTO public.keywords (id, word) VALUES (7, 'profit');
+INSERT INTO public.keywords (id, word) VALUES (8, 'phone');
+INSERT INTO public.keywords (id, word) VALUES (9, 'hours');
+INSERT INTO public.keywords (id, word) VALUES (10, 'bitcoin');
+INSERT INTO public.keywords (id, word) VALUES (11, 'account');
+INSERT INTO public.keywords (id, word) VALUES (12, 'wallet');
+INSERT INTO public.keywords (id, word) VALUES (13, 'usd');
+INSERT INTO public.keywords (id, word) VALUES (14, 'startup');
+INSERT INTO public.keywords (id, word) VALUES (15, 'start');
+INSERT INTO public.keywords (id, word) VALUES (16, 'sir');
+INSERT INTO public.keywords (id, word) VALUES (17, 'referral');
+INSERT INTO public.keywords (id, word) VALUES (18, 'recommendation');
+INSERT INTO public.keywords (id, word) VALUES (19, 'profits');
+INSERT INTO public.keywords (id, word) VALUES (20, 'platform');
+INSERT INTO public.keywords (id, word) VALUES (21, 'payment');
+INSERT INTO public.keywords (id, word) VALUES (22, 'pay');
+INSERT INTO public.keywords (id, word) VALUES (23, 'online');
+INSERT INTO public.keywords (id, word) VALUES (24, 'note');
+INSERT INTO public.keywords (id, word) VALUES (25, 'message');
+INSERT INTO public.keywords (id, word) VALUES (26, 'manager');
+INSERT INTO public.keywords (id, word) VALUES (27, 'legit');
+INSERT INTO public.keywords (id, word) VALUES (28, 'investments');
+INSERT INTO public.keywords (id, word) VALUES (29, 'investment');
+INSERT INTO public.keywords (id, word) VALUES (30, 'instant');
+INSERT INTO public.keywords (id, word) VALUES (31, 'hrs');
+INSERT INTO public.keywords (id, word) VALUES (32, 'fees');
+INSERT INTO public.keywords (id, word) VALUES (33, 'enquiry');
+INSERT INTO public.keywords (id, word) VALUES (34, 'cryptocurrency');
+INSERT INTO public.keywords (id, word) VALUES (35, 'crypto');
+INSERT INTO public.keywords (id, word) VALUES (36, 'contact');
+INSERT INTO public.keywords (id, word) VALUES (37, 'channel');
+INSERT INTO public.keywords (id, word) VALUES (38, 'breakthrough');
+INSERT INTO public.keywords (id, word) VALUES (39, 'bonuses');
+INSERT INTO public.keywords (id, word) VALUES (40, 'bills');
+INSERT INTO public.keywords (id, word) VALUES (41, 'below');
+INSERT INTO public.keywords (id, word) VALUES (47, 'thanks');
+INSERT INTO public.keywords (id, word) VALUES (48, 'bunker');
+INSERT INTO public.keywords (id, word) VALUES (49, 'whole');
+INSERT INTO public.keywords (id, word) VALUES (50, 'word');
+INSERT INTO public.keywords (id, word) VALUES (52, 'smartphones');
+INSERT INTO public.keywords (id, word) VALUES (53, 'gmail');
+INSERT INTO public.keywords (id, word) VALUES (55, 'salary');
+INSERT INTO public.keywords (id, word) VALUES (56, 'details');
+INSERT INTO public.keywords (id, word) VALUES (58, 'net');
+INSERT INTO public.keywords (id, word) VALUES (59, 'trust');
+INSERT INTO public.keywords (id, word) VALUES (60, 'week');
+INSERT INTO public.keywords (id, word) VALUES (61, 'trade');
+INSERT INTO public.keywords (id, word) VALUES (64, 'charges');
+INSERT INTO public.keywords (id, word) VALUES (67, 'commission');
+INSERT INTO public.keywords (id, word) VALUES (68, 'invention');
+INSERT INTO public.keywords (id, word) VALUES (69, 'inbox');
+INSERT INTO public.keywords (id, word) VALUES (70, 'admin');
+INSERT INTO public.keywords (id, word) VALUES (71, 'computer');
+INSERT INTO public.keywords (id, word) VALUES (72, 'feel');
+INSERT INTO public.keywords (id, word) VALUES (74, 'weekend');
+INSERT INTO public.keywords (id, word) VALUES (75, 'interest');
+INSERT INTO public.keywords (id, word) VALUES (76, 'break');
+INSERT INTO public.keywords (id, word) VALUES (77, 'richard');
+INSERT INTO public.keywords (id, word) VALUES (78, 'worth');
+
+
+--
+-- TOC entry 2888 (class 0 OID 0)
+-- Dependencies: 205
+-- Name: keywords_id_seq; Type: SEQUENCE SET; Schema: public; Owner: api
+--
+
+SELECT pg_catalog.setval('public.keywords_id_seq', 78, true);
 
 
 --
@@ -119,8 +197,6 @@ ALTER TABLE ONLY public.keywords
 ALTER TABLE ONLY public.keywords
     ADD CONSTRAINT keywords_word_key UNIQUE (word);
 
-
--- Completed on 2022-05-30 09:03:33
 
 --
 -- PostgreSQL database dump complete
