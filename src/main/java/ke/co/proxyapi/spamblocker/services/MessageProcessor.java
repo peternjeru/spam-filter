@@ -85,7 +85,7 @@ public class MessageProcessor implements Processor
 
 	private boolean hasTgLink(String message)
 	{
-		Set<String> tgDomains = Set.of("t.me", "telegram.me");
+		Set<String> tgDomains = Set.of("t.me", "telegram.me","telegram.dog");
 
 		UrlDetector parser = new UrlDetector(message, UrlDetectorOptions.HTML);
 		List<Url> urlList = parser.detect();
