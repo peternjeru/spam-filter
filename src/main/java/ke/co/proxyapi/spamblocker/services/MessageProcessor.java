@@ -88,7 +88,6 @@ public class MessageProcessor implements Processor
 
 		for (String spamWord : spamWords)
 		{
-			log.info("At spam word " + spamWord + " in message");
 			if (ascii.toLowerCase().contains(spamWord.toLowerCase().trim()))
 			{
 				log.info("Found spam word " + spamWord + " in message");
