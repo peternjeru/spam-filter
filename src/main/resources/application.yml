@@ -28,6 +28,7 @@ app:
   telegram:
     api-url: "https://api.telegram.org"
     token: ${spambot_tg_api_token}
+  spamwords: "pulsechain,arbitrum,aipad,bnb chain,gitcoin"
 
   http:
     connect-timeout: 60000

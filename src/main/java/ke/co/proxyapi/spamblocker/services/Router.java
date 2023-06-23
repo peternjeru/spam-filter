@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 public class Router extends RouteBuilder
 {
 	@Autowired
-	private TelegramService telegramService;
+	private DeleteTelegramMessageService deleteTelegramMessageService;
+
+	@Autowired
+	private BanTelegramUserService banTelegramUserService;
 
 	@Autowired
 	private MessageProcessor messageProcessor;
@@ -27,10 +30,16 @@ public class Router extends RouteBuilder
 				.process(newKeywordsProcessor)
 				.end();
 
-		from("direct:telegram")
+		from("direct:telegram:deleteMessage")
 				.throttle(20)
 				.timePeriodMillis(1000)
-				.process(telegramService)
+				.process(deleteTelegramMessageService)
+				.end();
+
+		from("direct:telegram:banUser")
+				.throttle(20)
+				.timePeriodMillis(1000)
+				.process(banTelegramUserService)
 				.end();
 	}
 }

@@ -3,6 +3,7 @@ package ke.co.proxyapi.spamblocker.services;
 import com.linkedin.urls.Url;
 import com.linkedin.urls.detection.UrlDetector;
 import com.linkedin.urls.detection.UrlDetectorOptions;
+import ke.co.proxyapi.spamblocker.dtos.BanUserDto;
 import ke.co.proxyapi.spamblocker.dtos.DeleteMessageDto;
 import ke.co.proxyapi.spamblocker.dtos.MessageDto;
 import ke.co.proxyapi.spamblocker.dtos.UpdateDto;
@@ -36,6 +37,9 @@ public class MessageProcessor implements Processor
 
 	@Value("${app.leeway-max}")
 	private Integer leewayMax;
+
+	@Value("${app.spamwords}")
+	private String[] spamWords;
 
 	private final Pattern NON_ASCII_PATTERN = Pattern.compile("\\P{ASCII}");
 
@@ -79,7 +83,18 @@ public class MessageProcessor implements Processor
 		if ((allMatches.size() >= leewayMin && hasTgLink(ascii)) || allMatches.size() >= leewayMax)
 		{
 			DeleteMessageDto deleteMessageDto = new DeleteMessageDto(messageDto.getChat().getId(), messageDto.getMessageID());
-			template.asyncSendBody("direct:telegram", deleteMessageDto);
+			template.asyncSendBody("direct:telegram:deleteMessage", deleteMessageDto);
+		}
+
+		for (String spamWord : spamWords)
+		{
+			log.info("At spam word " + spamWord + " in message");
+			if (ascii.toLowerCase().contains(spamWord.toLowerCase().trim()))
+			{
+				log.info("Found spam word " + spamWord + " in message");
+				BanUserDto banUserDto = new BanUserDto(messageDto.getChat().getId(), messageDto.getUser().getId(), false);
+				template.asyncSendBody("direct:telegram:banUser", banUserDto);
+			}
 		}
 	}
 

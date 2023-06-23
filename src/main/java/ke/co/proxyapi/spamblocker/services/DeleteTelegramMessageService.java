@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class TelegramService implements Processor
+public class DeleteTelegramMessageService implements Processor
 {
 	@Autowired
 	private Gson gson;
