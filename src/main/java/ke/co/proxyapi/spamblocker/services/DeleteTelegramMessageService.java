@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,28 +16,13 @@ public class DeleteTelegramMessageService implements Processor
 	private Gson gson;
 
 	@Autowired
-	private HttpService httpService;
-
-	@Value("${app.telegram.api-url}")
-	private String tgApiUrl;
-
-	@Value("${app.telegram.token}")
-	private String tgToken;
+	private TelegramApiService telegramApiService;
 
 	@Override
 	public void process(Exchange exchange)
 	{
 		DeleteMessageDto dto = exchange.getMessage().getBody(DeleteMessageDto.class);
 		String requestJson = gson.toJson(dto);
-		String url = tgApiUrl + "/bot" + tgToken + "/deleteMessage";
-
-		try
-		{
-			httpService.process(url, requestJson);
-		}
-		catch (RuntimeException exception)
-		{
-			log.error(exception.getMessage(), exception);
-		}
+		telegramApiService.sendMessage("deleteMessage", requestJson);
 	}
 }
