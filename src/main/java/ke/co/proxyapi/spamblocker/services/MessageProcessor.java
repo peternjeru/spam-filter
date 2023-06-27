@@ -1,5 +1,6 @@
 package ke.co.proxyapi.spamblocker.services;
 
+import com.ibm.icu.text.Transliterator;
 import com.linkedin.urls.Url;
 import com.linkedin.urls.detection.UrlDetector;
 import com.linkedin.urls.detection.UrlDetectorOptions;
@@ -12,12 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.text.Normalizer;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -32,6 +31,8 @@ public class MessageProcessor implements Processor
 	@Autowired
 	private ProducerTemplate template;
 
+	private final Transliterator transliterator = Transliterator.getInstance("Any-Latin/BGN");
+
 	@Value("${app.leeway-min}")
 	private Integer leewayMin;
 
@@ -40,8 +41,6 @@ public class MessageProcessor implements Processor
 
 	@Value("${app.spamwords}")
 	private String[] spamWords;
-
-	private final Pattern NON_ASCII_PATTERN = Pattern.compile("\\P{ASCII}");
 
 	@Override
 	public void process(Exchange exchange)
@@ -73,24 +72,27 @@ public class MessageProcessor implements Processor
 			return;
 		}
 
-		String normalized = Normalizer.normalize(StringUtils.stripAccents(text), Normalizer.Form.NFKC);
-		String ascii = NON_ASCII_PATTERN.matcher(normalized).replaceAll("");
-		log.info("Normalized Txt:\n\n" + ascii);
+		String normalizedText = transliterator.transliterate(text);
+		log.info("Normalized Text:\n" + normalizedText);
 
-		List<Integer> allMatches = keywordsRepository.findAllMatches(ascii);
-		log.info("Matches: " + allMatches.size());
-
-		if ((allMatches.size() >= leewayMin && hasTgLink(ascii)) || allMatches.size() >= leewayMax)
+		List<Integer> allMatches = keywordsRepository.findAllMatches(normalizedText);
+		if ((allMatches.size() >= leewayMin && hasTgLink(normalizedText)) || allMatches.size() >= leewayMax)
 		{
+			log.info("Matches: " + allMatches.size());
 			DeleteMessageDto deleteMessageDto = new DeleteMessageDto(messageDto.getChat().getId(), messageDto.getMessageID());
 			template.asyncSendBody("direct:telegram:deleteMessage", deleteMessageDto);
 		}
 
+		String lowerCase = normalizedText.toLowerCase();
 		for (String spamWord : spamWords)
 		{
-			if (ascii.toLowerCase().contains(spamWord.toLowerCase().trim()))
+			Pattern pattern = Pattern.compile(spamWord, Pattern.CASE_INSENSITIVE);
+			if (pattern.matcher(lowerCase).results().count() >= 2)
 			{
-				log.info("Found spam word " + spamWord + " in message");
+				log.info("Found spam word '" + spamWord + "' in message");
+				DeleteMessageDto deleteMessageDto = new DeleteMessageDto(messageDto.getChat().getId(), messageDto.getMessageID());
+				template.asyncSendBody("direct:telegram:deleteMessage", deleteMessageDto);
+
 				BanUserDto banUserDto = new BanUserDto(messageDto.getChat().getId(), messageDto.getUser().getId(), false);
 				template.asyncSendBody("direct:telegram:banUser", banUserDto);
 			}
